@@ -59,21 +59,19 @@ public class StudentRest {
     }
 
     // funkar ej
-    @Path("getByLastName/")
+    @Path("{lastName}")
     @GET
-    public Response getStudentByLastName(@QueryParam("lastName") String lastName) {
+        public Response getStudentByLastName(@PathParam("lastName") String lastName) {
+        Student foundStudent = (Student) studentService.getStudentByLastName(lastName);
+        return Response.ok(foundStudent).build();
 
-        List<Student> students = studentService.getStudentByLastName(lastName);
 
-        String responseString = "Student with lastname " + lastName + ":" + students;
-        return Response.ok(responseString).type(MediaType.TEXT_PLAIN).build();
-    }
 
     //        if (foundStudent == null) {
 //            throw new WebApplicationException(Response.status(Response.Status.NOT_FOUND)
 //                    .entity("Student with lastname: " + lastName + " was not found in database")
 //                    .type(MediaType.TEXT_PLAIN_TYPE).build());
-//        }
+        }
 
     @Path("{id}")
     @DELETE
