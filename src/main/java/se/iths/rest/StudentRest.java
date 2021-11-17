@@ -22,8 +22,13 @@ public class StudentRest {
     @Path("")
     @POST
     public Response createStudent(Student student) {
-        studentService.createNewStudent(student);
-        return Response.ok(student).build();
+        try {
+            studentService.createNewStudent(student);
+            return Response.ok(student).build();
+        } catch (Exception e) {
+            throw new WebApplicationException(Response.status(Response.Status.NOT_ACCEPTABLE)
+                    .entity("Error when creating new student " + e).type(MediaType.APPLICATION_JSON).build());
+        }
     }
 
     @Path("update")
@@ -52,26 +57,31 @@ public class StudentRest {
     public Response getAllStudents() {
         List<Student> listOfStudents = studentService.getAllStudents();
         if (listOfStudents.isEmpty()) {
-            throw new WebApplicationException(Response.status(Response.Status.NOT_FOUND)
+            throw new WebApplicationException(Response.status(Response.Status.NO_CONTENT)
                     .entity("There are no students in the database").type(MediaType.TEXT_PLAIN).build());
         }
         return Response.ok(listOfStudents).build();
     }
 
     // funkar ej
-    @Path("{lastName}")
+    @Path("{lastname}")
     @GET
-        public Response getStudentByLastName(@PathParam("lastName") String lastName) {
-        Student foundStudent = (Student) studentService.getStudentByLastName(lastName);
-        return Response.ok(foundStudent).build();
+    public Response getStudentByLastName(@PathParam("lastname") String lastName) {
 
-
+        List<Student> foundStudent = studentService.getStudentByLastName(lastName);
+        if (foundStudent.contains(lastName)){
+            return Response.ok(foundStudent).build();
+        } else {
+            throw new WebApplicationException(Response.status(Response.Status.NOT_FOUND)
+                    .entity("Could not find student with lastname: " + lastName).type(MediaType.TEXT_PLAIN).build());
+        }
+    }
 
     //        if (foundStudent == null) {
 //            throw new WebApplicationException(Response.status(Response.Status.NOT_FOUND)
 //                    .entity("Student with lastname: " + lastName + " was not found in database")
 //                    .type(MediaType.TEXT_PLAIN_TYPE).build());
-        }
+
 
     @Path("{id}")
     @DELETE
