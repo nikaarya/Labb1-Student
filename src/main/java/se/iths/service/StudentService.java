@@ -18,10 +18,6 @@ public class StudentService {
         entityManager.persist(student);
     }
 
-    public void updateStudent(Student student) {
-        entityManager.merge(student);
-    }
-
     public Student updateStudentEmail(Long id, String email) {
         Student findStudent = entityManager.find(Student.class, id);
         findStudent.setEmail(email);

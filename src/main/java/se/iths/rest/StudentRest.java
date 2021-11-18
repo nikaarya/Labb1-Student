@@ -32,13 +32,6 @@ public class StudentRest {
         }
     }
 
-    @Path("")
-    @PUT
-    public Response updateStudent(Student student) {
-        studentService.updateStudent(student);
-        return Response.ok(student).build();
-    }
-
     @Path("updateemail/{id}")
     @PATCH
     public Response updateEmail(@PathParam("id") Long id, @QueryParam("email") String email) {
@@ -69,9 +62,9 @@ public class StudentRest {
     public Response getStudentByLastName(@PathParam("lastname") String lastName) {
 
         List<Student> foundStudent = studentService.getStudentByLastName(lastName);
-        if (foundStudent.contains(lastName)){
+        try {
             return Response.ok(foundStudent).build();
-        } else {
+        } catch (Exception e) {
             throw new WebApplicationException(Response.status(Response.Status.NOT_FOUND)
                     .entity("Could not find student with lastname: " + lastName).type(MediaType.TEXT_PLAIN).build());
         }
