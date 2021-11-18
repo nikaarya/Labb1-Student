@@ -32,7 +32,7 @@ public class StudentRest {
         }
     }
 
-    @Path("update")
+    @Path("")
     @PUT
     public Response updateStudent(Student student) {
         studentService.updateStudent(student);
@@ -52,12 +52,12 @@ public class StudentRest {
         }
     }
 
-    @Path("getall")
+    @Path("")
     @GET
     public Response getAllStudents() {
         List<Student> listOfStudents = studentService.getAllStudents();
         if (listOfStudents.isEmpty()) {
-            throw new WebApplicationException(Response.status(Response.Status.NO_CONTENT)
+            throw new WebApplicationException(Response.status(Response.Status.NOT_FOUND)
                     .entity("There are no students in the database").type(MediaType.TEXT_PLAIN).build());
         }
         return Response.ok(listOfStudents).build();
@@ -94,6 +94,4 @@ public class StudentRest {
                     .entity(exceptionStarter + id + " does not exist in the database").type(MediaType.TEXT_PLAIN_TYPE).build());
         }
     }
-
-
 }
