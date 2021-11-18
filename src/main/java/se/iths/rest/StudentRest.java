@@ -8,13 +8,14 @@ import javax.inject.Inject;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-import java.util.ArrayList;
 import java.util.List;
 
 @Path("students")
 @Consumes(MediaType.APPLICATION_JSON)
 @Produces(MediaType.APPLICATION_JSON)
 public class StudentRest {
+
+    private static final String exceptionStarter = "Student with ID: ";
 
     @Inject
     StudentService studentService;
@@ -47,9 +48,8 @@ public class StudentRest {
         } catch (Exception e) {
 
             throw new WebApplicationException(Response.status(Response.Status.NOT_FOUND)
-                    .entity("Student with ID: " + id + " was not found").type(MediaType.TEXT_PLAIN).build());
+                    .entity(exceptionStarter + id + " was not found").type(MediaType.TEXT_PLAIN).build());
         }
-
     }
 
     @Path("getall")
@@ -88,10 +88,10 @@ public class StudentRest {
     public Response deleteStudent(@PathParam("id") Long id) {
         try {
             studentService.deleteStudent(id);
-            return Response.ok("Student with ID: " + id + " has been deleted").type(MediaType.TEXT_PLAIN_TYPE).build();
+            return Response.ok(exceptionStarter + id + " has been deleted").type(MediaType.TEXT_PLAIN_TYPE).build();
         } catch (Exception e) {
             throw new WebApplicationException(Response.status(Response.Status.NOT_FOUND)
-                    .entity("Student with ID: " + id + " does not exist in the database").type(MediaType.TEXT_PLAIN_TYPE).build());
+                    .entity(exceptionStarter + id + " does not exist in the database").type(MediaType.TEXT_PLAIN_TYPE).build());
         }
     }
 
