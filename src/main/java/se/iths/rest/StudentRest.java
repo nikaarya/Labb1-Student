@@ -18,15 +18,13 @@ import java.util.List;
 @Produces(MediaType.APPLICATION_JSON)
 public class StudentRest {
 
-    private static final String exceptionStarter = "Student with ID: ";
-
     @Inject
     StudentService studentService;
 
     @Path("")
     @POST
     public Response createStudent(Student student) {
-        String message = "{\"Error when creating new student \" " + " }";
+        String message = "{\"Error when creating new student\"" + " }";
         try {
             studentService.createNewStudent(student);
             return Response.ok(student).build();
@@ -40,12 +38,13 @@ public class StudentRest {
     @Path("updateemail/{id}")
     @PATCH
     public Response updateEmail(@PathParam("id") Long id, @QueryParam("email") String email) {
+        String message = "{\"Could not find student with ID \": " + id +" }";
         try {
             Student updatedStudentEmail = studentService.updateStudentEmail(id, email);
             return Response.ok(updatedStudentEmail).build();
         } catch (NullPointerException npe) {
             throw new WebApplicationException(Response.status(Response.Status.NOT_FOUND)
-                    .entity(exceptionStarter + id + " was not found " + npe).type(MediaType.APPLICATION_JSON).build());
+                    .entity(message).type(MediaType.APPLICATION_JSON).build());
         }
     }
 
@@ -53,14 +52,14 @@ public class StudentRest {
     @GET
     public Response getAllStudents() throws JsonException{
         List<Student> listOfStudents = studentService.getAllStudents();
+        String message = "{\"There are no students in the database \"" +" }";
         if (listOfStudents.isEmpty()) {
             throw new WebApplicationException(Response.status(Response.Status.NOT_FOUND)
-                    .entity("There are no students in the database").type(MediaType.APPLICATION_JSON).build());
+                    .entity(message).type(MediaType.APPLICATION_JSON).build());
         }
         return Response.ok(listOfStudents).build();
     }
 
-    // exception funkar ej
     @Path("{lastname}")
     @GET
     public Response getStudentByLastName(@PathParam("lastname") String lastName) {
@@ -69,7 +68,7 @@ public class StudentRest {
         String message = "{\"Could not find student with lastname \": " + lastName + " }";
 
 
-        if (foundStudent.size() == 0) {
+        if (foundStudent.isEmpty()) {
             throw new WebApplicationException(Response.status(Response.Status.NOT_FOUND)
                     .entity(message).type(MediaType.APPLICATION_JSON).build());
         } else {
@@ -80,13 +79,14 @@ public class StudentRest {
     @Path("{id}")
     @DELETE
     public Response deleteStudent(@PathParam("id") Long id) {
+        String message = "{\"No student in the database with ID \": " + id + " " + " }";
+
         try {
             studentService.deleteStudent(id);
-            return Response.ok(exceptionStarter + id + " has been deleted").type(MediaType.TEXT_PLAIN_TYPE).build();
+            return Response.ok("Student with ID: " + id + " has been deleted").type(MediaType.TEXT_PLAIN).build();
         } catch (Exception e) {
             throw new WebApplicationException(Response.status(Response.Status.NOT_FOUND)
-                    .entity(exceptionStarter + id + " does not exist in the database " + e.getMessage())
-                    .type(MediaType.APPLICATION_JSON).build());
+                    .entity(message).type(MediaType.APPLICATION_JSON).build());
         }
     }
 }
