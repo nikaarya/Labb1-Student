@@ -1,6 +1,7 @@
 package se.iths.rest;
 
 
+import se.iths.StudentBadRequestException;
 import se.iths.StudentNotFoundException;
 import se.iths.entity.Student;
 import se.iths.service.StudentService;
@@ -26,10 +27,8 @@ public class StudentRest {
         try {
             studentService.createNewStudent(student);
             return Response.ok(student).build();
-        } catch (StudentNotFoundException e) {
-
-            throw new WebApplicationException(Response.status(Response.Status.BAD_REQUEST)
-                    .entity(message).type(MediaType.APPLICATION_JSON).build());
+        } catch (Exception e) {
+            throw new StudentBadRequestException(message);
         }
     }
 
