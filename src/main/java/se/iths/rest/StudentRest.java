@@ -46,7 +46,7 @@ public class StudentRest {
 
     @Path("")
     @GET
-    public Response getAllStudents() throws StudentNotFoundException {
+    public Response getAllStudents() {
         List<Student> listOfStudents = studentService.getAllStudents();
         String message = "{\"There are no students in the database \"" +" }";
         if (listOfStudents.isEmpty()) {

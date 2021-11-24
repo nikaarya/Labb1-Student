@@ -8,7 +8,7 @@ public class StudentBadRequestException extends WebApplicationException {
 
     public StudentBadRequestException (String errorMessage) {
 
-        throw new WebApplicationException(Response.status(Response.Status.BAD_REQUEST)
+        super(Response.status(Response.Status.BAD_REQUEST)
                 .entity(errorMessage).type(MediaType.APPLICATION_JSON).build());
     }
 }
